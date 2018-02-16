@@ -1,6 +1,3 @@
 /.gradle/
 /build/
 /node_modules/
-
-# Only keep the package-lock.json this is not an npm package
-/package.json
