@@ -5,6 +5,9 @@ module.exports = {
 
     globals: {
 
+        // Nashorn
+        Java: false,
+
         // Enonic XP
         app: false,
         log: false,
@@ -47,8 +50,9 @@ module.exports = {
             'no-multi-spaces': ['off'],
             'no-underscore-dangle': ['error', {
                 allow: [
-                    '_path',
-                    '_id'
+                    '_id', // content-type property
+                    '_path', // content-type property
+                    '_selected' // option-set property
                 ],
                 allowAfterThis: false,
                 allowAfterSuper: false,
