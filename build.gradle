@@ -1,0 +1,56 @@
+plugins {
+    id 'java' // Needed for assemble and build
+    id 'com.enonic.xp.app' version '1.0.17'
+    id 'com.moowork.node' version '1.2.0'
+}
+
+
+repositories {
+    jcenter()
+    xp.enonicRepo()
+}
+
+
+app {
+    name = project.appName
+    displayName = 'Change me in build.gradle'
+    vendorName = 'Enonic AS'
+    vendorUrl = 'http://enonic.com'
+    systemVersion = "${xpVersion}"
+}
+
+
+dependencies {
+    compile "com.enonic.xp:core-api:${xpVersion}"
+    compile "com.enonic.xp:portal-api:${xpVersion}"
+}
+
+
+node {
+    version '8.9.4'
+    download true
+}
+
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+        }
+        resources { // Paths relative to src/main/resources
+            exclude '**/*.es' // Avoid having your es files copied into ./build
+        }
+    }
+}
+
+
+task webpack(type:NodeTask) {
+    script = file('node_modules/webpack/bin/webpack.js')
+    args = [
+        '--color',
+        '--config', 'webpack.config.babel.js'
+    ]
+}
+webpack.dependsOn npmInstall
+assemble.dependsOn webpack
+assemble.mustRunAfter webpack
