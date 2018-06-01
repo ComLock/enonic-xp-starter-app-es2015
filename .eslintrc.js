@@ -14,6 +14,10 @@ module.exports = {
         resolve: false,
         __: false,
 
+        // Mocha
+        //describe: false,
+        //it: false,
+
         // Client-side js
         //console: false,
         document: false,
