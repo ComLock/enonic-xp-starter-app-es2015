@@ -36,7 +36,7 @@ dependencies {
 
 
 node {
-    version '8.11.2'
+    version '8.11.3'
     download true
 }
 
@@ -54,7 +54,7 @@ sourceSets {
 
 
 task webpack(type:NodeTask) {
-    script = file('node_modules/webpack-cli/bin/webpack.js')
+    script = file('node_modules/webpack-cli/bin/cli.js')
     args = [
         '--color',
         '--config', 'webpack.config.babel.js'
@@ -66,7 +66,7 @@ assemble.mustRunAfter webpack
 
 
 task watch(type:NodeTask) {
-    script = file('node_modules/webpack-cli/bin/webpack.js')
+    script = file('node_modules/webpack-cli/bin/cli.js')
     args = [
         '--color',
         '--config', 'webpack.config.babel.js',
