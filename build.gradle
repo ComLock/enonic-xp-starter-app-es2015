@@ -35,12 +35,18 @@ dependencies {
 }
 
 
+//──────────────────────────────────────────────────────────────────────────────
+// Gradle node plugin
+//──────────────────────────────────────────────────────────────────────────────
 node {
-    version '8.11.3'
+    version '8.11.4'
     download true
 }
 
 
+//──────────────────────────────────────────────────────────────────────────────
+// Webpack
+//──────────────────────────────────────────────────────────────────────────────
 sourceSets {
     main {
         java {
@@ -56,11 +62,11 @@ sourceSets {
 task webpack(type:NodeTask) {
     script = file('node_modules/webpack-cli/bin/cli.js')
     args = [
-        '--color',
-        '--config', 'webpack.config.babel.js'
+        '--color'
     ]
 }
 webpack.dependsOn npmInstall
+webpack.mustRunAfter npmInstall
 assemble.dependsOn webpack
 assemble.mustRunAfter webpack
 
@@ -69,7 +75,6 @@ task watch(type:NodeTask) {
     script = file('node_modules/webpack-cli/bin/cli.js')
     args = [
         '--color',
-        '--config', 'webpack.config.babel.js',
         '--watch'
     ]
 }

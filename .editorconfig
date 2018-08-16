@@ -5,13 +5,16 @@ root = true
 
 # Unix-style newlines with a newline ending every file
 [*]
+charset = utf-8
 end_of_line = lf
+indent_size = 4
+indent_style = tab
 insert_final_newline = true
 trim_trailing_whitespace = true
 
 # Matches multiple files with brace expansion notation
 # Set default charset
-[{.,}*.{js,babelrc,editorconfig,gradle,json,es,xml}]
+[{.,}*.{babelrc,editorconfig,gradle,json,xml}]
 charset = utf-8
 indent_style = space
 indent_size = 4
@@ -19,7 +22,7 @@ indent_size = 4
 [*.{css,less}]
 indent_size = 2
 
-[*.{java}]
+[*.{es,js,java}]
 charset = utf-8
 indent_style = tab
 indent_size = 4
