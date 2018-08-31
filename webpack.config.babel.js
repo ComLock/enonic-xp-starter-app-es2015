@@ -72,11 +72,18 @@ const SERVER_JS_CONFIG = {
 					minified: false,
 					plugins: [
 						'array-includes',
-						'optimize-starts-with',
-						'transform-object-assign',
-						'transform-object-rest-spread'
+						//'optimize-starts-with', https://github.com/xtuc/babel-plugin-optimize-starts-with/issues/1
+						'@babel/plugin-proposal-object-rest-spread',
+						'@babel/plugin-transform-object-assign'
 					],
-					presets: ['es2015']
+					presets: [
+						[
+							'@babel/env',
+							{
+								useBuiltIns: false // false means polyfill not required runtime
+							}
+						]
+					]
 				} // options
 			}] // use
 		}] // rules
