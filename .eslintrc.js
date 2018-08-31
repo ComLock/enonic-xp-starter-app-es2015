@@ -43,7 +43,7 @@ module.exports = {
             'import/no-extraneous-dependencies': ['off'],
             'import/no-unresolved': ['off'],
             indent: ['warn', 'tab'],
-            'max-len': ['error', 100, 2, {
+            'max-len': ['error', 106, 2, {
                 ignoreUrls: true,
                 ignoreComments: true,
                 ignoreRegExpLiterals: true,
