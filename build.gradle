@@ -66,7 +66,13 @@ sourceSets {
             srcDir 'src/main/java'
         }
         resources { // Paths relative to src/main/resources
+            exclude '**/*.css'
             exclude '**/*.es' // Avoid having your es files copied into ./build
+            exclude '**/*.gitkeep'
+            exclude '**/*.less'
+            exclude '**/*.sass'
+            exclude '**/*.scss'
+            exclude '**/*.styl'
         }
     }
 }
