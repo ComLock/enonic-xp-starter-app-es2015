@@ -29,6 +29,16 @@ const context = path.resolve(__dirname, SRC_DIR);
 const extensions = ['.es', '.js', '.json']; // used in resolve
 const outputPath = path.join(__dirname, DST_DIR);
 
+const stats = {
+	colors: true,
+	hash: false,
+	maxModules: 0,
+	modules: false,
+	moduleTrace: false,
+	timings: false,
+	version: false
+};
+
 
 //──────────────────────────────────────────────────────────────────────────────
 // Functions
@@ -125,7 +135,8 @@ const SERVER_JS_CONFIG = {
 			'/site': path.resolve(__dirname, SRC_DIR, 'site')
 		},
 		extensions
-	} // resolve
+	}, // resolve
+	stats
 };
 //console.log(`SERVER_JS_CONFIG:${JSON.stringify(SERVER_JS_CONFIG, null, 4)}`);
 
@@ -197,6 +208,12 @@ const STYLE_CONFIG = {
 				...STYLE_USE,
 				'stylus-loader', // compiles Stylus to CSS
 			]
+		}, {
+			test: /\.svg/,
+			use: {
+				loader: 'svg-url-loader',
+				options: {}
+			}
 		}, ES_RULE]
 	}, // module
 	output: {
@@ -212,7 +229,8 @@ const STYLE_CONFIG = {
 		new MiniCssExtractPlugin({
 			filename: `../${DST_DIR}/assets/style.css`
 		})
-	]
+	],
+	stats
 };
 //console.log(`STYLE_CONFIG:${JSON.stringify(STYLE_CONFIG, null, 4)}`);
 

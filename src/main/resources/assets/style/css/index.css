@@ -1,3 +1,7 @@
-.css {
+.css::placeholder {
 	color: gray;
+}
+
+.css-background-url-enonic {
+	background: url('../../images/svg/enonic.svg');
 }

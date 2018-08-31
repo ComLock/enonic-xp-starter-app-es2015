@@ -73,6 +73,7 @@ sourceSets {
             exclude '**/*.sass'
             exclude '**/*.scss'
             exclude '**/*.styl'
+            exclude 'assets/**/*.svg'
         }
     }
 }
