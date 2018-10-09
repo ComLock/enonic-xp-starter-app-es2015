@@ -88,7 +88,7 @@ const BABEL_USE = {
 		],
 		presets: [
 			[
-				'@babel/env',
+				'@babel/preset-env',
 				{
 					useBuiltIns: false // false means polyfill not required runtime
 				}
