@@ -31,6 +31,7 @@ const outputPath = path.join(__dirname, DST_DIR);
 
 const stats = {
 	colors: true,
+	entrypoints: false,
 	hash: false,
 	maxModules: 0,
 	modules: false,
