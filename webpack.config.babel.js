@@ -231,6 +231,9 @@ const STYLE_CONFIG = {
 			filename: `../${DST_DIR}/assets/style.css`
 		})
 	],
+	resolve: {
+		extensions: ['.sass', '.scss', '.less', '.styl', '.css']
+	},
 	stats
 };
 //console.log(`STYLE_CONFIG:${JSON.stringify(STYLE_CONFIG, null, 4)}`);
