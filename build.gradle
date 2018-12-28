@@ -2,7 +2,7 @@ plugins {
 	id 'java' // Needed for assemble and build
 	//id 'maven' // When is this needed?
 	id 'maven-publish' // Provides publishing and publishToMavenLocal
-	id 'com.enonic.xp.app' version '1.0.17'
+	id 'com.enonic.xp.app' version '1.1.0'
 	id 'com.moowork.node' version '1.2.0'
 }
 
@@ -94,13 +94,14 @@ sourceSets {
 
 
 task webpack(type:NodeTask) {
+	dependsOn npmInstall
+	mustRunAfter npmInstall
 	script = file('node_modules/webpack-cli/bin/cli.js')
 	args = [
 		'--color'
 	]
+	outputs.dir './build/resources/main' // processResources will delete the directory if this is not present
 }
-webpack.dependsOn npmInstall
-webpack.mustRunAfter npmInstall
 
 
 task watch(type:NodeTask) {
@@ -113,6 +114,9 @@ task watch(type:NodeTask) {
 
 
 processResources {
+	dependsOn webpack
+	mustRunAfter webpack
+
 	exclude '**/.gitkeep'
 
 	// Let webpack handle these (rather than gradle)
@@ -124,9 +128,6 @@ processResources {
 	exclude '**/*.scss'
 	exclude '**/*.styl'
 }
-
-processResources.mustRunAfter webpack
-processResources.dependsOn webpack
 
 
 publishing {

@@ -19,6 +19,7 @@ import UglifyJsPlugin from 'uglifyjs-webpack-plugin'; // Supports ECMAScript2015
 //──────────────────────────────────────────────────────────────────────────────
 // Common
 //──────────────────────────────────────────────────────────────────────────────
+const MODE = 'production';
 const JS_EXTENSION_GLOB_BRACE = '*.{es,es6,mjs,jsx,flow,js}';
 const ASSETS_PATH_GLOB_BRACE = '{site/assets,assets}';
 
@@ -107,10 +108,10 @@ const SERVER_JS_CONFIG = {
 	context,
 	entry: SERVER_JS_ENTRY,
 	externals: [
-		/\/lib\/(enonic|xp)/
+		/^\//
 	],
 	devtool: false, // Don't waste time generating sourceMaps
-	mode: 'production',
+	mode: MODE,
 	module: {
 		rules: [ES_RULE]
 	}, // module
@@ -128,13 +129,6 @@ const SERVER_JS_CONFIG = {
 		libraryTarget: 'commonjs'
 	}, // output
 	resolve: {
-		alias: {
-			'/content-types': path.resolve(__dirname, SRC_DIR, 'site', 'content-types'),
-			'/lib': path.resolve(__dirname, SRC_DIR, 'lib'),
-			'/mixins': path.resolve(__dirname, SRC_DIR, 'site', 'mixins'),
-			'/services': path.resolve(__dirname, SRC_DIR, 'services'),
-			'/site': path.resolve(__dirname, SRC_DIR, 'site')
-		},
 		extensions
 	}, // resolve
 	stats
@@ -163,7 +157,7 @@ const STYLE_USE = [
 const STYLE_CONFIG = {
 	context: path.resolve(__dirname, SRC_DIR, 'assets/style'),
 	entry: './index.es',
-	mode: 'production',
+	mode: MODE,
 	module: {
 		rules: [{
 			test: /\.(c|le|sa|sc)ss$/,
