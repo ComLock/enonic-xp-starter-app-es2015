@@ -216,8 +216,10 @@ const STYLE_CONFIG = {
 	},
 	plugins: [
 		new CleanWebpackPlugin(
-			path.join(__dirname, '.build'),
 			{
+				cleanOnceBeforeBuildPatterns: [
+					path.join(__dirname, '.build')
+				],
 				verbose: true
 			}
 		),
