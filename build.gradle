@@ -65,7 +65,7 @@ tasks.withType(Copy) {
 // Gradle wrapper
 //──────────────────────────────────────────────────────────────────────────────
 task wrapper(type: Wrapper) {
-	gradleVersion = '4.10.3'
+	gradleVersion = "${gradleVersion}"
 }
 
 
@@ -73,7 +73,7 @@ task wrapper(type: Wrapper) {
 // Gradle node plugin
 //──────────────────────────────────────────────────────────────────────────────
 node {
-	version '10.15.0'
+	version "${nodeVersion}"
 	download true
 }
 
