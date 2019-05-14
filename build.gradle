@@ -119,10 +119,15 @@ processResources {
 
 	exclude '**/.gitkeep'
 
+	// Let gradle copy these
+	//include '**/*.mjs'
+	//include '**/*.xml'
+
 	// Let webpack handle these (rather than gradle)
 	exclude '**/*.css'
 	exclude '**/*.es'
 	exclude '**/*.js'
+	exclude '**/*.jsx'
 	exclude '**/*.less'
 	exclude '**/*.sass'
 	exclude '**/*.scss'
