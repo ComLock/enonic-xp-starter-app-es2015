@@ -4,7 +4,7 @@
 //──────────────────────────────────────────────────────────────────────────────
 import glob from 'glob';
 import path from 'path';
-import CleanWebpackPlugin from 'clean-webpack-plugin';
+import {CleanWebpackPlugin} from 'clean-webpack-plugin';
 import EsmWebpackPlugin from '@purtuga/esm-webpack-plugin';
 /*import jssCamelCase from 'jss-camel-case';
 import jssDefaultUnit from 'jss-default-unit';
