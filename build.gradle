@@ -64,8 +64,8 @@ tasks.withType(Copy) {
 //──────────────────────────────────────────────────────────────────────────────
 // Gradle wrapper
 //──────────────────────────────────────────────────────────────────────────────
-task wrapper(type: Wrapper) {
-	gradleVersion = "${gradleVersion}"
+wrapper {
+	distributionUrl = "${gradleDistributionUrl}"
 }
 
 
