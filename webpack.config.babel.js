@@ -13,7 +13,7 @@ import jssNested from 'jss-nested';
 import jssPropsSort from 'jss-props-sort';
 import jssVendorPrefixer from 'jss-vendor-prefixer';*/
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import postcssPresetEnv from 'postcss-preset-env';
+//import postcssPresetEnv from 'postcss-preset-env';
 import UglifyJsPlugin from 'uglifyjs-webpack-plugin'; // Supports ECMAScript2015
 
 //──────────────────────────────────────────────────────────────────────────────
@@ -45,9 +45,8 @@ const WEBPACK_CONFIG = [];
 //──────────────────────────────────────────────────────────────────────────────
 // Functions
 //──────────────────────────────────────────────────────────────────────────────
-//const toStr = v => JSON.stringify(v, null, 4);
-const dict = arr => Object.assign(...arr.map(([k, v]) => ({ [k]: v })));
-
+//const toStr = (v) => JSON.stringify(v, null, 4);
+const dict = (arr) => Object.assign(...arr.map(([k, v]) => ({ [k]: v })));
 
 //──────────────────────────────────────────────────────────────────────────────
 // Server-side Javascript
@@ -64,7 +63,7 @@ const SERVER_JS_FILES = glob.sync(`${SRC_DIR}/**/${JS_EXTENSION_GLOB_BRACE}`, {
 //console.log(`SERVER_JS_FILES:${toStr(SERVER_JS_FILES)}`);
 
 if (SERVER_JS_FILES.length) {
-	const SERVER_JS_ENTRY = dict(SERVER_JS_FILES.map(k => [
+	const SERVER_JS_ENTRY = dict(SERVER_JS_FILES.map((k) => [
 		k.replace(`${SRC_DIR}/`, '').replace(/\.[^.]*$/, ''), // name
 		`.${k.replace(`${SRC_DIR}`, '')}` // source relative to context
 	]));
@@ -130,7 +129,6 @@ if (SERVER_JS_FILES.length) {
 	WEBPACK_CONFIG.push(SERVER_JS_CONFIG);
 }
 
-
 //──────────────────────────────────────────────────────────────────────────────
 // Styling
 //──────────────────────────────────────────────────────────────────────────────
@@ -141,9 +139,21 @@ const STYLE_USE = [
 		options: { importLoaders: 1 }
 	}, {
 		loader: 'postcss-loader',
-		options: {
+		/*options: { // postcss-loader 3.x
 			ident: 'postcss',
 			plugins: () => [postcssPresetEnv()]
+		}*/
+		options: { // postcss-loader 4.x
+			postcssOptions: {
+				plugins: [
+					[
+						'postcss-preset-env',
+						{
+							// Options
+						}
+					]
+				]
+			}
 		}
 	}
 ];
@@ -257,14 +267,13 @@ const STYLE_CONFIG = {
 
 WEBPACK_CONFIG.push(STYLE_CONFIG);
 
-
 //──────────────────────────────────────────────────────────────────────────────
 const ESM_ASSETS_GLOB = `${SRC_DIR}/${ASSETS_PATH_GLOB_BRACE}/**/*.{jsx,mjs}`;
 const ESM_ASSETS_FILES = glob.sync(ESM_ASSETS_GLOB);
 //console.log(`ESM_ASSETS_FILES:${toStr(ESM_ASSETS_FILES)}`);
 
 if (ESM_ASSETS_FILES.length) {
-	const ASSETS_ESM_ENTRY = dict(ESM_ASSETS_FILES.map(k => [
+	const ASSETS_ESM_ENTRY = dict(ESM_ASSETS_FILES.map((k) => [
 		k.replace(`${SRC_DIR}/assets/`, '').replace(/\.[^.]*$/, ''), // name
 		`.${k.replace(`${SRC_DIR}/assets`, '')}` // source relative to context
 	]));
@@ -331,7 +340,6 @@ if (ESM_ASSETS_FILES.length) {
 	//console.log(`ASSETS_ESM_CONFIG:${toStr(ASSETS_ESM_CONFIG)}`);
 	WEBPACK_CONFIG.push(ASSETS_ESM_CONFIG);
 }
-
 
 //──────────────────────────────────────────────────────────────────────────────
 // Exports
