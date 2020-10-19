@@ -54,7 +54,7 @@ dependencies {
 	//include 'com.enonic.lib:lib-router:2.1.0'
 	//include 'com.enonic.lib:menu:1.3.3'
 	//include 'com.enonic.lib:text-encoding:1.2.0'
-	//include 'com.enonic.lib:util:2.2.1'
+	//include 'com.enonic.lib:lib-util:2.2.1'
 }
 
 
@@ -96,8 +96,8 @@ sourceSets {
 
 
 task webpack(type:NodeTask) {
-	dependsOn npmInstall
-	mustRunAfter npmInstall
+	dependsOn yarn_install
+	mustRunAfter yarn_install
 	script = file('node_modules/webpack-cli/bin/cli.js')
 	args = [
 		'--color'

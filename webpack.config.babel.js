@@ -143,9 +143,7 @@ const STYLE_USE = [
 		loader: 'postcss-loader',
 		options: {
 			ident: 'postcss',
-			plugins: () => [
-				postcssPresetEnv(/* options */)
-			]
+			plugins: () => [postcssPresetEnv()]
 		}
 	}
 ];
