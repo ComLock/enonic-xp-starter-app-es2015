@@ -9,3 +9,4 @@
 ### 2021-02-01
 
 * Node 14.15.4
+* Require Enonic XP 7.4.1
