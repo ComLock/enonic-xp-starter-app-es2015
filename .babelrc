@@ -1,15 +1,8 @@
 {
   "plugins": [
-    "array-includes",
-    "@babel/plugin-proposal-object-rest-spread",
-    "@babel/plugin-transform-object-assign"
   ],
   "presets": [
-    [
-        "@babel/preset-env",
-        {
-            "useBuiltIns": false
-        }
-    ]
+    "@babel/preset-env",
+    "@babel/preset-react"
   ]
 }

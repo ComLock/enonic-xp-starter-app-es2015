@@ -10,3 +10,4 @@
 
 * Node 14.15.4
 * Require Enonic XP 7.4.1
+* Upgrade node modules (including Webpack 5)
