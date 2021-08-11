@@ -6,6 +6,16 @@
 
 ## Changelog
 
+### 2021-08-11
+
+* Require Enonic XP 7.7.1
+* Upgrade node modules
+* Core-js 3.16.1
+* Babel 7.15.3
+* Webpack 5.50
+* Node 14.17.4
+* Gradle 6.4
+
 ### 2021-02-01
 
 * Node 14.15.4
