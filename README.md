@@ -6,6 +6,14 @@
 
 ## Changelog
 
+### 2021-08-17
+
+* Enonic XP 7.7.1 -> 7.7.2
+* Gradle 6.4 -> 6.9
+* Node 14.17.4 -> 14.17.5
+* Node modules:
+  * webpack-cli 4.7.2 -> 4.8.0
+
 ### 2021-08-11
 
 * Require Enonic XP 7.7.1

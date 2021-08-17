@@ -70,6 +70,10 @@ wrapper {
 	distributionUrl = "${gradleDistributionUrl}"
 }
 
+/*tasks.named('wrapper') {
+    distributionType = Wrapper.DistributionType.ALL
+}*/
+
 
 //──────────────────────────────────────────────────────────────────────────────
 // Gradle node plugin
