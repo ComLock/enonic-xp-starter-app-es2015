@@ -6,6 +6,10 @@
 
 ## Changelog
 
+### 2021-08-27
+
+* com.enonic.lib:lib-util:2.2.1 -> 3.0.0
+
 ### 2021-08-17
 
 * Enonic XP 7.7.1 -> 7.7.2

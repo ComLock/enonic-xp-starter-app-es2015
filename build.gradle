@@ -44,6 +44,7 @@ dependencies {
 	//include "com.enonic.xp:lib-repo:${xpVersion}"
 	//include "com.enonic.xp:lib-task:${xpVersion}"
 	//include "com.enonic.xp:lib-thymeleaf:${xpVersion}"
+	//include "com.enonic.xp:lib-value:${xpVersion}"
 	//include "com.enonic.xp:lib-websocket:${xpVersion}"
 	//include "com.enonic.xp:lib-xslt:${xpVersion}"
 
@@ -54,7 +55,7 @@ dependencies {
 	//include 'com.enonic.lib:lib-router:2.1.0'
 	//include 'com.enonic.lib:menu:1.3.3'
 	//include 'com.enonic.lib:text-encoding:1.2.0'
-	//include 'com.enonic.lib:lib-util:2.2.1'
+	//include 'com.enonic.lib:lib-util:3.0.0'
 }
 
 
