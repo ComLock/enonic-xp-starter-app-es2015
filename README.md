@@ -6,6 +6,16 @@
 
 ## Changelog
 
+### 2021-09-08
+
+* Use webpack experiments.outputModule=true and output.library.type=module to build *.mjs
+* Use import {namedExport} from 'url/path/file.mjs' client-side
+* Manually polyfill Array.find, Array.flat and Number.isInteger
+* Node 14.17.5 -> 14.17.6
+* Babel 7.15.3 -> 7.15.5
+* Core-js 3.16.1 -> 3.17.2
+* Webpack 5.50.0 -> 5.52.0
+
 ### 2021-08-27
 
 * com.enonic.lib:lib-util:2.2.1 -> 3.0.0

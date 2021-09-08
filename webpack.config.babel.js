@@ -5,7 +5,10 @@
 import glob from 'glob';
 import path from 'path';
 import {CleanWebpackPlugin} from 'clean-webpack-plugin';
-//import EsmWebpackPlugin from '@purtuga/esm-webpack-plugin';
+import {
+	ESBuildMinifyPlugin,
+	ESBuildPlugin
+} from 'esbuild-loader';
 /*import jssCamelCase from 'jss-camel-case';
 import jssDefaultUnit from 'jss-default-unit';
 //import jssGlobal from 'jss-global';
@@ -94,10 +97,14 @@ if (SERVER_JS_FILES.length) {
 		mode: MODE,
 		module: {
 			rules: [{
-				exclude: [
+				/*exclude: [
 					/\bcore-js\b/,
 					/\bwebpack\b/,
 					/\bregenerator-runtime\b/,
+				],*/
+				exclude: [ // It takes time to transpile, if you know they don't need transpilation to run in Enonic you may list them here:
+					/node_modules[\\/]core-js/, // will cause errors if they are transpiled by Babel
+					/node_modules[\\/]webpack[\\/]buildin/ // will cause errors if they are transpiled by Babel
 				],
 				test: /\.(es6?|js)$/, // Will need js for node module depenencies
 				use: [{
@@ -111,15 +118,39 @@ if (SERVER_JS_FILES.length) {
 							//'import-css-to-jss', // NOTE This will hide the css from MiniCssExtractPlugin!
 							//'optimize-starts-with', https://github.com/xtuc/babel-plugin-optimize-starts-with/issues/1
 							//'transform-prejss',
+							'@babel/plugin-transform-arrow-functions',
 							'@babel/plugin-proposal-class-properties',
-							'@babel/plugin-proposal-export-default-from',
-							'@babel/plugin-proposal-export-namespace-from',
+							'@babel/plugin-proposal-export-default-from', // export v from 'mod'; // I think it adds a default export
+							'@babel/plugin-proposal-export-namespace-from', // export * as ns from 'mod';
 							'@babel/plugin-proposal-object-rest-spread',
-							'@babel/plugin-syntax-dynamic-import',
+							'@babel/plugin-syntax-dynamic-import', // Allow parsing of import()
 							'@babel/plugin-syntax-throw-expressions',
+							'@babel/plugin-transform-block-scoped-functions',
+							'@babel/plugin-transform-block-scoping',
 							'@babel/plugin-transform-classes',
-							'@babel/plugin-transform-modules-commonjs',
-							'@babel/plugin-transform-object-assign',
+							'@babel/plugin-transform-computed-properties',
+							'@babel/plugin-transform-destructuring',
+							'@babel/plugin-transform-duplicate-keys',
+							'@babel/plugin-transform-for-of',
+							'@babel/plugin-transform-function-name',
+							'@babel/plugin-transform-instanceof',
+							'@babel/plugin-transform-literals',
+							'@babel/plugin-transform-new-target',
+							'@babel/plugin-transform-member-expression-literals',
+							'@babel/plugin-transform-modules-commonjs', // transforms ECMAScript modules to CommonJS
+							'@babel/plugin-transform-object-assign', // Not used locally, perhaps in node_modules?
+							'@babel/plugin-transform-object-super',
+							'@babel/plugin-transform-parameters',
+							'@babel/plugin-transform-property-literals',
+							'@babel/plugin-transform-property-mutators',
+							'@babel/plugin-transform-reserved-words',
+							'@babel/plugin-transform-shorthand-properties',
+							'@babel/plugin-transform-spread',
+							'@babel/plugin-transform-sticky-regex',
+							'@babel/plugin-transform-template-literals',
+							'@babel/plugin-transform-typeof-symbol',
+							'@babel/plugin-transform-unicode-escapes', // This plugin is included in @babel/preset-env
+							'@babel/plugin-transform-unicode-regex',
 							'array-includes'
 						],
 						presets: [
@@ -133,7 +164,7 @@ if (SERVER_JS_FILES.length) {
 									forceAllTransforms: true,
 
 									targets: {
-										esmodules: true, // Enonic XP doesn't support ECMAScript Modules
+										esmodules: false, // Enonic XP doesn't support ECMAScript Modules
 										// https://node.green/
 										node: '0.10.48'
 									},
@@ -180,18 +211,20 @@ if (SERVER_JS_FILES.length) {
 		},
 		plugins: [
 			new webpack.ProvidePlugin({
+				Buffer: ['buffer', 'Buffer'],
 				global: 'myGlobal'
 			})
 		],
 		resolve: {
 			alias: {
+				'@enonic/nashorn-polyfills': path.resolve(__dirname, 'src/main/resources/lib/nashorn/index.es'),
 				myGlobal: path.resolve(__dirname, 'src/main/resources/lib/nashorn/global')
 			},
-			extensions: serverSideExtensions.map((ext) => `.${ext}`),
+			extensions: serverSideExtensions.map((ext) => `.${ext}`)/*,
 			fallback: {
 				//buffer: false // Don't polyfill buffer since we're not running in Node? NO, Nashorn doesn't have buffer either.
 				buffer: require.resolve('buffer/') // Polyfill buffer since Nashorn doesn't provide it.
-			}
+			}*/
 		}, // resolve
 		stats
 	};
@@ -381,6 +414,7 @@ const STYLE_CONFIG = {
 WEBPACK_CONFIG.push(STYLE_CONFIG);
 
 //──────────────────────────────────────────────────────────────────────────────
+const ESBUILD_TARGET = 'es2015';
 const ESM_ASSETS_GLOB = `${SRC_DIR}/${ASSETS_PATH_GLOB_BRACE}/**/*.{jsx,mjs}`;
 const ESM_ASSETS_FILES = glob.sync(ESM_ASSETS_GLOB);
 //console.log(`ESM_ASSETS_FILES:${toStr(ESM_ASSETS_FILES)}`);
@@ -395,94 +429,59 @@ if (ESM_ASSETS_FILES.length) {
 	const ASSETS_ESM_CONFIG = {
 		context: path.resolve(__dirname, SRC_DIR, 'assets'),
 		entry: ASSETS_ESM_ENTRY,
+		experiments: {
+			outputModule: true
+		},
 		mode: MODE,
 		module: {
 			rules: [{
-				exclude: [
-					///\bcore-js\b/,
-					/node_modules/
-					///\bwebpack\b/,
-					///\bregenerator-runtime\b/,
+				exclude: [ // It takes time to transpile, if you know they don't need transpilation to run in Enonic you may list them here:
+					/node_modules[\\/]core-js/, // will cause errors if they are transpiled by Babel
+					/node_modules[\\/]webpack[\\/]buildin/ // will cause errors if they are transpiled by Babel
 				],
-				//test: /\.(es6?|m?jsx?)$/, // Will need js for node module depenencies
 				test: /\.jsx$/,
-				use: [{
-					loader: 'babel-loader'/*,
-					options: {
-						babelrc: false, // The .babelrc file should only be used to transpile config files.
-						comments: false,
-						compact: false,
-						minified: false,
-						plugins: [
-							//'@babel/plugin-proposal-class-properties',
-							//'@babel/plugin-proposal-export-default-from',
-							//'@babel/plugin-proposal-export-namespace-from',
-							//'@babel/plugin-proposal-object-rest-spread',
-							//'@babel/plugin-syntax-dynamic-import',
-							//'@babel/plugin-syntax-throw-expressions',
-							//'@babel/plugin-transform-object-assign',
-							//['@babel/plugin-transform-runtime', { // This destroys esm?
-							//	regenerator: true
-							//}],
-							//'array-includes'
-						],
-						presets: [
-							[
-								'@babel/preset-env',
-								{
-									//corejs: 3, // Needed when useBuiltIns: usage
-
-									// Enables all transformation plugins and as a result,
-									// your code is fully compiled to ES5
-									//forceAllTransforms: true,
-									//forceAllTransforms: false,
-
-									targets: 'defaults'//,
-									//targets: {
-									//	esmodules: false, //
-									//	esmodules: true//, // Client side
-
-									//	https://node.green/
-									//	node: '0.10.48'
-									//},
-									//useBuiltIns: false // no polyfills are added automatically
-									//useBuiltIns: 'entry' // replaces direct imports of core-js to imports of only the specific modules required for a target environment
-									//useBuiltIns: 'usage' // polyfills will be added automatically when the usage of some feature is unsupported in target environment
-								}
-							],
-							'@babel/preset-react'
-						]
-					} // options*/
-				}]
+				loader: 'esbuild-loader',
+				options: {
+					loader: 'jsx',
+					target: ESBUILD_TARGET
+				}
+			}, {
+				exclude: [ // It takes time to transpile, if you know they don't need transpilation to run in Enonic you may list them here:
+					/node_modules[\\/]core-js/, // will cause errors if they are transpiled by Babel
+					/node_modules[\\/]webpack[\\/]buildin/ // will cause errors if they are transpiled by Babel
+				],
+				test: /\.tsx?$/,
+				loader: 'esbuild-loader',
+				options: {
+					loader: 'tsx',
+					target: ESBUILD_TARGET
+				}
 			}]
 		}, // module
 		optimization: {
 			//mangleExports: 'deterministic', // By default optimization.mangleExports: 'deterministic' is enabled in production mode and disabled elsewise.
 			mangleExports: false,
-			minimize: false,
-			/*minimizer: [
-				/*new TerserPlugin({
-					terserOptions: {
-						compress: {
-							drop_console: false
-						},
-						keep_classnames: true,
-						keep_fnames: true
-					}
+			minimize: MODE === 'production',
+			minimizer: MODE === 'production' ? [
+				new ESBuildMinifyPlugin({
+					target: ESBUILD_TARGET
 				})
-				/*new UglifyJsPlugin({
-					parallel: true, // highly recommended
-					sourceMap: false
-				})
-			],*/
+			] : [],
 			//usedExports: true // Determine used exports for each module and don't generate code for unused exports aka Dead code elimination.
 			usedExports: false // Don't determine used exports for each module, no dead code removal
 			//usedExports: 'global' // To opt-out from used exports analysis per runtime
 		},
 		output: {
 			path: path.join(__dirname, DST_DIR, 'assets'),
-			filename: '[name].js',
-			library: 'MyLibrary',
+			filename: '[name].mjs',
+
+			//library: 'MyLibrary',
+			//libraryTarget: 'window' // The return value of your entry point will be assigned to the window object using the output.library value.
+
+			library: {
+				type: 'module'
+			}
+
 			//libraryTarget: 'amd' // This will expose your library as an AMD module.
 			//libraryTarget: 'amd-require' // This packages your output with an immediately-executed AMD require(dependencies, factory) wrapper.
 			//libraryTarget: 'assign' // This will generate an implied global which has the potential to reassign an existing value (use with caution).
@@ -502,20 +501,17 @@ if (ESM_ASSETS_FILES.length) {
 			//libraryTarget: 'this' // The return value of your entry point will be assigned to this under the property named by output.library. The meaning of this is up to you
 			//libraryTarget: 'var' // (default) When your library is loaded, the return value of your entry point will be assigned to a variable
 			//libraryTarget: 'umd'
-			libraryTarget: 'window' // The return value of your entry point will be assigned to the window object using the output.library value.
+		},
+		performance: {
+			hints: false
 		},
 		plugins: [
-			//new EsmWebpackPlugin() // exports doesn't exist in Browser
+			new ESBuildPlugin()
 		],
 		resolve: {
 			extensions: [
-				//'.es',
-				//'.es6',
-				//'.mjs',
-				'.jsx'//,
-				//'.js',
-				//'.json'
-			]
+				'mjs', 'jsx', 'tsx', 'esm', 'es', 'es6', 'js', 'json', 'ts'
+			].map(ext => `.${ext}`)
 		}, // resolve
 		stats
 	};

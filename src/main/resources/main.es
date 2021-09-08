@@ -1,3 +1,4 @@
+import '@enonic/nashorn-polyfills';
 import getIn from 'get-value';
 import setIn from 'set-value';
 

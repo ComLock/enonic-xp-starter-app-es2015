@@ -35,10 +35,10 @@ export function get() {
       <input placeholder="This text should be blue"/>
     </form>
     <div id='react-container'></div>
-	<script src="${assetUrl({path: 'js/react/Div.js'})}"></script>
+	<!--script src="${assetUrl({path: 'js/react/Div.mjs'})}"></script-->
     <script type="module" defer>
-      //import {Div} from '${assetUrl({path: 'js/react/Div.js'})}';
-	  console.debug(window.MyLibrary);
+      import {Div} from '${assetUrl({path: 'js/react/Div.mjs'})}';
+	  //console.debug(window.MyLibrary);
 	  const props = undefined;
       /*const props = {
 		  style: {
@@ -49,7 +49,8 @@ export function get() {
 	  const children = ['hello'];
 	  console.debug(children);
       ReactDOM.render(
-        React.createElement(window.MyLibrary.Div, [props], [...children]),
+        //React.createElement(window.MyLibrary.Div, [props], [...children]),
+		React.createElement(Div, [props], [...children]),
         document.getElementById('react-container')
       );
     </script>
