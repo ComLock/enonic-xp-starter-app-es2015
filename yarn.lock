@@ -1576,10 +1576,10 @@
   resolved "https://registry.yarnpkg.com/@discoveryjs/json-ext/-/json-ext-0.5.2.tgz#8f03a22a04de437254e8ce8cc84ba39689288752"
   integrity sha512-HyYEUDeIj5rRQU2Hk5HTB2uHsbRQpF70nvMhVzi+VJR0X+xNEhjPui4/kBf3VeH/wqD28PT4sVOm8qqLjBrSZg==
 
-"@enonic/js-utils@^0.28.0":
-  version "0.28.0"
-  resolved "https://registry.yarnpkg.com/@enonic/js-utils/-/js-utils-0.28.0.tgz#dfe691f29c91c0ffbce051ac4818170342c5d575"
-  integrity sha512-hIfridEcVvDgbvfQ9tr4u0YpDYPh4nNZ51cAZfaGwWo9uM3/8n4DgUpOVk/hOQmliLcpG809oxQra/6Doto28A==
+"@enonic/js-utils@^0.29.0":
+  version "0.29.0"
+  resolved "https://registry.yarnpkg.com/@enonic/js-utils/-/js-utils-0.29.0.tgz#442794f05ef61ed31046ade1b3d8f7a84dc922b8"
+  integrity sha512-EYnhx8c2XIn3EkvhjeQfjxCdfh4ktlu9N4GxlEr+SVJkqv2X4Ys1ROvXECJfUSHvL40Us3OBMhKsZkGMEduRDQ==
 
 "@eslint/eslintrc@^0.4.3":
   version "0.4.3"

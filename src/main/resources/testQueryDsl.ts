@@ -20,6 +20,8 @@ import {
 //@ts-ignore
 import {connect} from '/lib/xp/node';
 
+const and = storage.query.dsl.and;
+const bool = storage.query.dsl.bool;
 const fulltext = storage.query.dsl.fulltext;
 const inQuery = storage.query.dsl.inQuery;
 const like = storage.query.dsl.like;
@@ -107,7 +109,7 @@ export function testQueryDSL() {
 				const termQueryParams = {
 					count: -1,
 					//query: term('_name', 'a')
-					query: term('myString', unStemmed)
+					query: bool(and(term('myString', unStemmed)))
 				}
 				log.info('termQueryParams:%s', toStr(termQueryParams));
 				const termQueryRes = connection.query(termQueryParams);
