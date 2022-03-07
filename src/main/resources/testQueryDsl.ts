@@ -39,6 +39,7 @@ const {
 	ngram,
 	pathMatch,
 	range,
+	sort,
 	stemmed,
 	term
 } = storage.query.dsl;
@@ -62,6 +63,9 @@ export function testQueryDSL() {
 		executeFunction({
 			description: 'Test QueryDSL',
 			func: () => {
+				//const functionContext = getContext();
+				//log.info('functionContext:%s', toStr(functionContext));
+
 				const repoId = 'com.enonic.tests';
 				try {
 					//const deleteRepoRes =
@@ -77,15 +81,25 @@ export function testQueryDSL() {
 				});
 				//log.info('createRepoRes:%s', createRepoRes);
 
+				//const userInExecuteFunction = getUser();
+				//log.info('userInExecuteFunction:%s', toStr(userInExecuteFunction));
+
 				const connection = connect({
 					branch: 'master',
+					/*principals: [
+						'role:system.admin',
+						'role:system.authenticated',
+						'role:system.everyone',
+						'user:system:su'
+					],*/
 					repoId
 				});
 
 				const unStemmed = 'cats';
 				const stem = 'cat';
 
-				const nodeA = connection.create({
+				const nodeA =
+				connection.create({
 					_indexConfig: {
 						default: {
 							"decideByType": true,
@@ -116,7 +130,9 @@ export function testQueryDSL() {
 					myNumber: 3,
 					myString: unStemmed
 				});
-				log.info('nodeA:%s', toStr(nodeA));
+				//log.info('nodeA:%s', toStr(nodeA));
+				log.info('nodeA._id:%s', nodeA._id);
+				connection.refresh();
 
 				const termQueryParams = {
 					count: -1,
@@ -137,7 +153,7 @@ export function testQueryDSL() {
 
 				const likeQueryParams = {
 					count: -1,
-					query: like('myString', '*ell*')
+					query: like('myString', '*at*')
 				}
 				log.info('likeQueryParams:%s', toStr(likeQueryParams));
 				const likeQueryRes = connection.query(likeQueryParams);
@@ -145,7 +161,7 @@ export function testQueryDSL() {
 
 				const rangeQueryParams = {
 					count: -1,
-					query: range('myString', {gt: 1})
+					query: range('myNumber', {gt: 1})
 				}
 				log.info('rangeQueryParams:%s', toStr(rangeQueryParams));
 				const rangeQueryRes = connection.query(rangeQueryParams);
@@ -161,7 +177,15 @@ export function testQueryDSL() {
 
 				const fulltextQueryParams = {
 					count: -1,
+					highlight: {
+						preTag: '<b>',
+						postTag: '</b>',
+						properties: {
+							myString: {}
+						}
+					},
 					query: fulltext('myString', unStemmed)
+					//query: `fulltext('myString','cats')`
 				}
 				log.info('fulltextQueryParams:%s', toStr(fulltextQueryParams));
 				const fulltextQueryRes = connection.query(fulltextQueryParams);
@@ -182,6 +206,39 @@ export function testQueryDSL() {
 				log.info('stemmedQueryParams:%s', toStr(stemmedQueryParams));
 				const stemmedQueryRes = connection.query(stemmedQueryParams);
 				log.info('stemmedQueryRes:%s', toStr(stemmedQueryRes));
+
+				const allQueryParams = {
+					aggregations: {},
+					count: -1,
+					explain: true,
+					filters: {},
+					highlight: {
+						preTag: '<b>',
+						postTag: '</b>',
+						properties: {
+							myString: {}
+						}
+					},
+					//query: '',
+					//query: `myString = '${unStemmed}'`,
+					//query: `_name = 'a'`,
+					//query: `myString like '${stem}*'`,
+
+					//──────────────────────────────────────────────────────────
+					// Sorting by id doesn't work
+					//──────────────────────────────────────────────────────────
+					//sort: sort('_name'), // Seems ASC is default? Yes
+					sort: sort('_name', 'DESC'),
+					//sort: sort('_name', 'ASC'),
+					//sort: '_score DESC',
+					//sort: sort('_score'),
+					//──────────────────────────────────────────────────────────
+
+					start: 0
+				}
+				log.info('allQueryParams:%s', toStr(allQueryParams));
+				const allQueryRes = connection.query(allQueryParams);
+				log.info('allQueryRes:%s', toStr(allQueryRes));
 			} // func
 		}); // executeFunction
 	}); // runInContext
