@@ -20,7 +20,7 @@ import {
 //@ts-ignore
 import {connect} from '/lib/xp/node';
 
-const and = storage.query.dsl.and;
+/*const and = storage.query.dsl.and;
 const bool = storage.query.dsl.bool;
 const fulltext = storage.query.dsl.fulltext;
 const inQuery = storage.query.dsl.inQuery;
@@ -29,7 +29,19 @@ const ngram = storage.query.dsl.ngram;
 const pathMatch = storage.query.dsl.pathMatch;
 const range = storage.query.dsl.range;
 const stemmed = storage.query.dsl.stemmed;
-const term = storage.query.dsl.term;
+const term = storage.query.dsl.term;*/
+const {
+	bool,
+	fulltext,
+	inQuery,
+	like,
+	must,
+	ngram,
+	pathMatch,
+	range,
+	stemmed,
+	term
+} = storage.query.dsl;
 
 
 const contextToRunIn = {
@@ -109,7 +121,7 @@ export function testQueryDSL() {
 				const termQueryParams = {
 					count: -1,
 					//query: term('_name', 'a')
-					query: bool(and(term('myString', unStemmed)))
+					query: bool(must(term('myString', unStemmed)))
 				}
 				log.info('termQueryParams:%s', toStr(termQueryParams));
 				const termQueryRes = connection.query(termQueryParams);
