@@ -1,0 +1,20 @@
+{
+	"compilerOptions": {
+		"baseUrl": "./",
+		"inlineSourceMap": false,
+		"inlineSources": false,
+		"listEmittedFiles": false,
+		"listFiles": false,
+		"module": "commonjs",
+		"moduleResolution": "node",
+		"noImplicitAny": false,
+		"paths": {
+			"@enonic/js-utils": ["node_modules/@enonic/js-utils/src"]
+		},
+		"removeComments": true,
+		"rootDir": "./src/main/resources",
+		"sourceMap": false,
+		"outDir": "build/resources/main",
+		"target": "es6",
+	}
+}

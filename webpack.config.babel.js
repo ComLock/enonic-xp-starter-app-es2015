@@ -17,9 +17,17 @@ import jssPropsSort from 'jss-props-sort';
 import jssVendorPrefixer from 'jss-vendor-prefixer';*/
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 //import postcssPresetEnv from 'postcss-preset-env';
+//import {print} from 'q-i';
 //import TerserPlugin from 'terser-webpack-plugin';
 //import UglifyJsPlugin from 'uglifyjs-webpack-plugin'; // Supports ECMAScript2015
 import webpack from 'webpack';
+
+// Check which version of node is used
+/*print({
+	//env: process.env,
+	execPath: process.execPath,
+	version: process.version
+}, { maxItems: Infinity });*/
 
 //──────────────────────────────────────────────────────────────────────────────
 // Common
@@ -27,7 +35,7 @@ import webpack from 'webpack';
 //const MODE = 'production';
 const MODE = 'development';
 
-const JS_EXTENSION_GLOB_BRACE = '*.{es,es6,mjs,jsx,flow,js}';
+const JS_EXTENSION_GLOB_BRACE = '*.{es,es6,mjs,jsx,flow,js,ts}';
 const ASSETS_PATH_GLOB_BRACE = '{site/assets,assets}';
 
 const SRC_DIR = 'src/main/resources';
@@ -42,7 +50,7 @@ const outputPath = path.join(__dirname, DST_DIR);
 const serverSideExtensions = [
 	'es',
 	'es6',
-	//'ts',
+	'ts',
 	//'tsx',
 	'js',
 	'json'
@@ -69,23 +77,28 @@ const dict = (arr) => Object.assign(...arr.map(([k, v]) => ({ [k]: v })));
 //──────────────────────────────────────────────────────────────────────────────
 // Server-side Javascript
 //──────────────────────────────────────────────────────────────────────────────
-const ALL_JS_ASSETS_GLOB = `${SRC_DIR}/${ASSETS_PATH_GLOB_BRACE}/**/${JS_EXTENSION_GLOB_BRACE}`;
-//console.log(`ALL_JS_ASSETS_GLOB:${toStr(ALL_JS_ASSETS_GLOB)}`);
+const TS_D_FILES = glob.sync(`${SRC_DIR}/**/*.d.ts`);
+//print({TS_D_FILES}, { maxItems: Infinity });
 
-const ALL_JS_ASSETS_FILES = glob.sync(ALL_JS_ASSETS_GLOB);
-//console.log(`ALL_JS_ASSETS_FILES:${toStr(ALL_JS_ASSETS_FILES)}`);
+const ALL_JS_ASSETS_GLOB = `${SRC_DIR}/${ASSETS_PATH_GLOB_BRACE}/**/${JS_EXTENSION_GLOB_BRACE}`;
+//print({ALL_JS_ASSETS_GLOB}, { maxItems: Infinity });
+
+const ALL_JS_ASSETS_FILES = glob.sync(ALL_JS_ASSETS_GLOB, {
+	ignore: TS_D_FILES
+});
+//print({ALL_JS_ASSETS_FILES}, { maxItems: Infinity });
 
 const SERVER_JS_FILES = glob.sync(`${SRC_DIR}/**/${JS_EXTENSION_GLOB_BRACE}`, {
-	ignore: ALL_JS_ASSETS_FILES
+	ignore: ALL_JS_ASSETS_FILES.concat(TS_D_FILES)
 });
-//console.log(`SERVER_JS_FILES:${toStr(SERVER_JS_FILES)}`);
+//print({SERVER_JS_FILES}, { maxItems: Infinity });
 
 if (SERVER_JS_FILES.length) {
 	const SERVER_JS_ENTRY = dict(SERVER_JS_FILES.map((k) => [
 		k.replace(`${SRC_DIR}/`, '').replace(/\.[^.]*$/, ''), // name
 		`.${k.replace(`${SRC_DIR}`, '')}` // source relative to context
 	]));
-	//console.log(`SERVER_JS_ENTRY:${toStr(SERVER_JS_ENTRY)}`);
+	//print({SERVER_JS_ENTRY}, { maxItems: Infinity });
 
 	const SERVER_JS_CONFIG = {
 		context,
@@ -106,7 +119,7 @@ if (SERVER_JS_FILES.length) {
 					/node_modules[\\/]core-js/, // will cause errors if they are transpiled by Babel
 					/node_modules[\\/]webpack[\\/]buildin/ // will cause errors if they are transpiled by Babel
 				],
-				test: /\.(es6?|js)$/, // Will need js for node module depenencies
+				test: /\.(es6?|ts|js)$/, // Will need js for node module depenencies
 				use: [{
 					loader: 'babel-loader',
 					options: {
@@ -154,6 +167,7 @@ if (SERVER_JS_FILES.length) {
 							'array-includes'
 						],
 						presets: [
+							'@babel/preset-typescript',
 							[
 								'@babel/preset-env',
 								{

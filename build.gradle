@@ -53,6 +53,7 @@ dependencies {
 	//include 'com.enonic.lib:lib-http-client:2.0.0'
 	//include 'com.enonic.lib:lib-license:2.0.0'
 	//include 'com.enonic.lib:lib-router:2.1.0'
+	//include 'com.enonic.lib:lib-static:1.0.2'
 	//include 'com.enonic.lib:menu:1.3.3'
 	//include 'com.enonic.lib:text-encoding:1.2.0'
 	//include 'com.enonic.lib:lib-util:3.0.0'
@@ -139,6 +140,7 @@ processResources {
 	exclude '**/*.sass'
 	exclude '**/*.scss'
 	exclude '**/*.styl'
+	exclude '**/*.ts'
 }
 
 

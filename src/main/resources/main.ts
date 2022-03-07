@@ -1,6 +1,8 @@
 import '@enonic/nashorn-polyfills';
-import getIn from 'get-value';
-import setIn from 'set-value';
+import {
+	getIn,
+	setIn
+} from '@enonic/js-utils/src';
 
 log.info('Hello');
 
