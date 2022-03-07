@@ -20,8 +20,10 @@ import {
 //@ts-ignore
 import {connect} from '/lib/xp/node';
 
+const fulltext = storage.query.dsl.fulltext;
 const inQuery = storage.query.dsl.inQuery;
 const like = storage.query.dsl.like;
+const ngram = storage.query.dsl.ngram;
 const pathMatch = storage.query.dsl.pathMatch;
 const range = storage.query.dsl.range;
 const term = storage.query.dsl.term;
@@ -66,6 +68,31 @@ export function testQueryDSL() {
 				});
 
 				const nodeA = connection.create({
+					_indexConfig: {
+						default: {
+							"decideByType": true,
+							"enabled": true,
+							"nGram": false,
+							"fulltext": false,
+							"includeInAllText": false,
+							"path": false,
+							//"indexValueProcessors": [],
+							"languages": ["en"]
+						},
+						configs: [{
+							path: 'myString',
+							config: {
+								"decideByType": true,
+								"enabled": true,
+								"nGram": true,
+								"fulltext": true,
+								"includeInAllText": false,
+								"path": false,
+								//"indexValueProcessors": [],
+								"languages": ["en"]
+							}
+						}]
+					},
 					_name: 'a',
 					myBoolean: true,
 					myNumber: 3,
@@ -113,6 +140,22 @@ export function testQueryDSL() {
 				log.info('pathMatchQueryParams:%s', toStr(pathMatchQueryParams));
 				const pathMatchQueryRes = connection.query(pathMatchQueryParams);
 				log.info('pathMatchQueryRes:%s', toStr(pathMatchQueryRes));
+
+				const fulltextQueryParams = {
+					count: -1,
+					query: fulltext('myString', 'hello')
+				}
+				log.info('fulltextQueryParams:%s', toStr(fulltextQueryParams));
+				const fulltextQueryRes = connection.query(fulltextQueryParams);
+				log.info('fulltextQueryRes:%s', toStr(fulltextQueryRes));
+
+				const nGramQueryParams = {
+					count: -1,
+					query: ngram('myString', 'he')
+				}
+				log.info('nGramQueryParams:%s', toStr(nGramQueryParams));
+				const nGramQueryRes = connection.query(nGramQueryParams);
+				log.info('nGramQueryRes:%s', toStr(nGramQueryRes));
 			} // func
 		}); // executeFunction
 	}); // runInContext
