@@ -26,6 +26,7 @@ const like = storage.query.dsl.like;
 const ngram = storage.query.dsl.ngram;
 const pathMatch = storage.query.dsl.pathMatch;
 const range = storage.query.dsl.range;
+const stemmed = storage.query.dsl.stemmed;
 const term = storage.query.dsl.term;
 
 
@@ -67,6 +68,9 @@ export function testQueryDSL() {
 					repoId
 				});
 
+				const unStemmed = 'cats';
+				const stem = 'cat';
+
 				const nodeA = connection.create({
 					_indexConfig: {
 						default: {
@@ -96,14 +100,14 @@ export function testQueryDSL() {
 					_name: 'a',
 					myBoolean: true,
 					myNumber: 3,
-					myString: 'hello'
+					myString: unStemmed
 				});
 				log.info('nodeA:%s', toStr(nodeA));
 
 				const termQueryParams = {
 					count: -1,
 					//query: term('_name', 'a')
-					query: term('myString', 'hello')
+					query: term('myString', unStemmed)
 				}
 				log.info('termQueryParams:%s', toStr(termQueryParams));
 				const termQueryRes = connection.query(termQueryParams);
@@ -111,7 +115,7 @@ export function testQueryDSL() {
 
 				const inQueryParams = {
 					count: -1,
-					query: inQuery('myString', ['hello'])
+					query: inQuery('myString', [unStemmed])
 				}
 				log.info('inQueryParams:%s', toStr(inQueryParams));
 				const inQueryRes = connection.query(inQueryParams);
@@ -143,7 +147,7 @@ export function testQueryDSL() {
 
 				const fulltextQueryParams = {
 					count: -1,
-					query: fulltext('myString', 'hello')
+					query: fulltext('myString', unStemmed)
 				}
 				log.info('fulltextQueryParams:%s', toStr(fulltextQueryParams));
 				const fulltextQueryRes = connection.query(fulltextQueryParams);
@@ -151,11 +155,19 @@ export function testQueryDSL() {
 
 				const nGramQueryParams = {
 					count: -1,
-					query: ngram('myString', 'he')
+					query: ngram('myString', stem)
 				}
 				log.info('nGramQueryParams:%s', toStr(nGramQueryParams));
 				const nGramQueryRes = connection.query(nGramQueryParams);
 				log.info('nGramQueryRes:%s', toStr(nGramQueryRes));
+
+				const stemmedQueryParams = {
+					count: -1,
+					query: stemmed('myString', stem, 'AND', 'en')
+				}
+				log.info('stemmedQueryParams:%s', toStr(stemmedQueryParams));
+				const stemmedQueryRes = connection.query(stemmedQueryParams);
+				log.info('stemmedQueryRes:%s', toStr(stemmedQueryRes));
 			} // func
 		}); // executeFunction
 	}); // runInContext
